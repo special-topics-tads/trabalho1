@@ -20,14 +20,14 @@ module.exports = {
 
   async findAllCar(req, res) {
     try {
-      const CarListSold = await Car.find();
+      const CarList = await Car.find();
       if (!CarList) {
         return res.status(400).json({ msg: 'Não há automoveis cadastrados' });
       } else {
-        return res.status(200).json({ msg: 'Lista de automoveis cadastrados:', CarListSold });
+        return res.status(200).json({ msg: 'Lista de automoveis cadastrados:', CarList });
       }
     } catch (error) {
-      return res.status(500).json({ msg: 'Erro de processo no servidor.' });
+      return res.status(500).json({ msg: 'Erro de processo no servidor.'});
     }
   },
 
@@ -58,4 +58,17 @@ module.exports = {
       return res.status(500).json({ msg: 'Erro de processo no servidor.' });
     }
   },
+
+  async deleteCarById(req, res){
+    try{
+      const _id = req.params;
+      const car = await Car.findByIdAndDelete(_id);
+      if(!car || car.length === 0)
+        return res.status(404).json({msg: "Carro não encontrado"});
+      else 
+        return res.json({msg : "Carro excluido com sucesso",car});
+      }catch(error){
+        return res.status(500).json({msg : "Erro de processo no servidor."});
+      }
+  }
 };
