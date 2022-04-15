@@ -31,11 +31,26 @@ module.exports = {
     }
   },
 
+  async carSold(req, res){
+    try{
+      const _id = req.params;
+      const car = await Car.findByIdAndUpdate(
+        _id,
+        { vendido: true }
+      );
+      if(!car || car.length === 0)
+        return res.status(404).json({msg: "Carro não encontrado"});
+      else 
+        return res.json({msg : "Carro vendido com sucesso"});
+      }catch(error){
+        return res.status(500).json({msg : "Erro de processo no servidor."});
+      }
+  },
+
   async findAllCarSold(req, res) {
     try {
       const CarListSold = await Car.find({ vendido: true });
-      //const CarListSold = await Car.find().where('vendido').equals(true);
-      if (!CarList) {
+      if (!CarListSold) {
         return res.status(400).json({ msg: 'Não há automoveis vendidos' });
       } else {
         return res.status(200).json({ msg: 'Lista de automoveis vendidos.', CarListSold });
@@ -47,12 +62,12 @@ module.exports = {
 
   async findAllCarStorage(req, res) {
     try {
-      const CarListSold = await Car.find({ vendido: false });
+      const CarListStorage = await Car.find({ vendido: false });
       //const CarListSold = await Car.find().where('vendido').equals(false);
-      if (!CarList) {
+      if (!CarListStorage) {
         return res.status(400).json({ msg: 'Não há automoveis vendidos' });
       } else {
-        return res.status(200).json({ msg: 'Lista de automoveis vendidos.', CarListSold });
+        return res.status(200).json({ msg: 'Lista de automoveis vendidos.', CarListStorage });
       }
     } catch (error) {
       return res.status(500).json({ msg: 'Erro de processo no servidor.' });
