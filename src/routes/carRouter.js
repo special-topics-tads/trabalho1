@@ -3,8 +3,9 @@ const router = express.Router();
 const carController = require('../controllers/carController');
 
 router.post('/newCar', carController.newCar);
+router.put('/updateCar/:_id', carController.updateCar);
 router.get('/findAllCar', carController.findAllCar);
-router.put('/carSold/:_id', carController.carSold);
+router.patch('/carSold/:_id', carController.carSold);
 router.get('/findAllCarSold', carController.findAllCarSold);
 router.get('/findAllCarStorage', carController.findAllCarStorage);
 router.delete('/deleteCarById/:_id',carController.deleteCarById);

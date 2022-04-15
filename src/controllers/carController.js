@@ -14,7 +14,30 @@ module.exports = {
         return res.status(200).json({ msg: 'Automovel adicionado ao estoque' });
       }
     } catch (error) {
-      return res.status(500).json({ msg: 'Erro de processo no servidor.' });
+      return res.status(500).json({ msg: 'Erro de processo no servidor. ' + error });
+    }
+  },
+
+  async updateCar(req, res) {
+    try{
+      const _id = req.params;
+      const carParam = req.body;
+      const car = await Car.findByIdAndUpdate(
+        _id,
+        {
+          fabricante: carParam.fabricante,
+          modelo: carParam.modelo,
+          placa: carParam.placa,
+          valor: carParam.valor,
+          caracteristicas: carParam.caracteristicas
+        }
+      );
+      if(!car || car.length === 0)
+        return res.status(404).json({msg: "Carro não encontrado"});
+      else
+        return res.json({msg : "Carro atualizado com sucesso!"});
+    }catch(error){
+      return res.status(400).json({msg : "Campos não preenchidos!"});
     }
   },
 
