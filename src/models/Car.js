@@ -7,6 +7,7 @@ const car = new mongoose.Schema({
   valor: Number,
   caracteristicas: [],
   vendido: { type: Boolean, default: false },
+  dataVenda: { type: Date, default: null },
 });
 
 module.exports = car;

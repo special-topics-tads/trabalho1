@@ -59,7 +59,7 @@ module.exports = {
       const _id = req.params;
       const car = await Car.findByIdAndUpdate(
         _id,
-        { vendido: true }
+        { vendido: true, dataVenda: new Date() }
       );
       if(!car || car.length === 0)
         return res.status(404).json({msg: "Carro não encontrado"});
@@ -91,6 +91,35 @@ module.exports = {
         return res.status(400).json({ msg: 'Não há automoveis vendidos' });
       } else {
         return res.status(200).json({ msg: 'Lista de automoveis vendidos.', CarListStorage });
+      }
+    } catch (error) {
+      return res.status(500).json({ msg: 'Erro de processo no servidor.' });
+    }
+  },
+
+  async findAllCarSales(req, res) {
+    try {
+      const _startDate = req.params._startDate;
+      const _endDate = req.params._endDate;
+      const CarListStorage = await Car.find({ 
+        vendido: true,
+        dataVenda: {
+          $gte: new Date(_startDate), 
+          $lt: new Date(_endDate)
+        }
+      });
+
+      if (!CarListStorage) {
+        return res.status(400).json({ msg: 'Não há automoveis vendidos' });
+      } else {
+        const totalCarrosVendidos = CarListStorage.length;
+        const totalValorVendas = CarListStorage.reduce((n, {valor}) => n + valor, 0);
+
+        const response = {
+          'totalCarrosVendidos': totalCarrosVendidos,
+          'valorAcumuladoVendas': totalValorVendas
+        }
+        return res.status(200).json({ msg: 'Relatório de vendas', response });
       }
     } catch (error) {
       return res.status(500).json({ msg: 'Erro de processo no servidor.' });
