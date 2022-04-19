@@ -99,8 +99,7 @@ module.exports = {
 
   async findAllCarSales(req, res) {
     try {
-      const _startDate = req.params._startDate;
-      const _endDate = req.params._endDate;
+      const { _startDate, _endDate } = req.body;
       const CarListStorage = await Car.find({ 
         vendido: true,
         dataVenda: {
