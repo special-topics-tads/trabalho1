@@ -19,25 +19,20 @@ module.exports = {
   },
 
   async updateCar(req, res) {
-    try{
+    try {
       const _id = req.params;
       const carParam = req.body;
-      const car = await Car.findByIdAndUpdate(
-        _id,
-        {
-          fabricante: carParam.fabricante,
-          modelo: carParam.modelo,
-          placa: carParam.placa,
-          valor: carParam.valor,
-          caracteristicas: carParam.caracteristicas
-        }
-      );
-      if(!car || car.length === 0)
-        return res.status(404).json({msg: "Carro não encontrado"});
-      else
-        return res.json({msg : "Carro atualizado com sucesso!"});
-    }catch(error){
-      return res.status(400).json({msg : "Campos não preenchidos!"});
+      const car = await Car.findByIdAndUpdate(_id, {
+        fabricante: carParam.fabricante,
+        modelo: carParam.modelo,
+        placa: carParam.placa,
+        valor: carParam.valor,
+        caracteristicas: carParam.caracteristicas,
+      });
+      if (!car || car.length === 0) return res.status(404).json({ msg: 'Carro não encontrado' });
+      else return res.json({ msg: 'Carro atualizado com sucesso!' });
+    } catch (error) {
+      return res.status(400).json({ msg: 'Campos não preenchidos!' });
     }
   },
 
@@ -50,24 +45,19 @@ module.exports = {
         return res.status(200).json({ msg: 'Lista de automoveis cadastrados:', CarList });
       }
     } catch (error) {
-      return res.status(500).json({ msg: 'Erro de processo no servidor.'});
+      return res.status(500).json({ msg: 'Erro de processo no servidor.' });
     }
   },
 
-  async carSold(req, res){
-    try{
+  async carSold(req, res) {
+    try {
       const _id = req.params;
-      const car = await Car.findByIdAndUpdate(
-        _id,
-        { vendido: true, dataVenda: new Date() }
-      );
-      if(!car || car.length === 0)
-        return res.status(404).json({msg: "Carro não encontrado"});
-      else 
-        return res.json({msg : "Carro vendido com sucesso"});
-      }catch(error){
-        return res.status(500).json({msg : "Erro de processo no servidor."});
-      }
+      const car = await Car.findByIdAndUpdate(_id, { vendido: true, dataVenda: new Date() });
+      if (!car || car.length === 0) return res.status(404).json({ msg: 'Carro não encontrado' });
+      else return res.json({ msg: 'Carro vendido com sucesso' });
+    } catch (error) {
+      return res.status(500).json({ msg: 'Erro de processo no servidor.' });
+    }
   },
 
   async findAllCarSold(req, res) {
@@ -86,7 +76,6 @@ module.exports = {
   async findAllCarStorage(req, res) {
     try {
       const CarListStorage = await Car.find({ vendido: false });
-      //const CarListSold = await Car.find().where('vendido').equals(false);
       if (!CarListStorage) {
         return res.status(400).json({ msg: 'Não há automoveis vendidos' });
       } else {
@@ -100,24 +89,24 @@ module.exports = {
   async findAllCarSales(req, res) {
     try {
       const { _startDate, _endDate } = req.body;
-      const CarListStorage = await Car.find({ 
+      const CarListStorage = await Car.find({
         vendido: true,
         dataVenda: {
-          $gte: new Date(_startDate), 
-          $lt: new Date(_endDate)
-        }
+          $gte: new Date(_startDate),
+          $lt: new Date(_endDate),
+        },
       });
 
       if (!CarListStorage) {
         return res.status(400).json({ msg: 'Não há automoveis vendidos' });
       } else {
         const totalCarrosVendidos = CarListStorage.length;
-        const totalValorVendas = CarListStorage.reduce((n, {valor}) => n + valor, 0);
+        const totalValorVendas = CarListStorage.reduce((n, { valor }) => n + valor, 0);
 
         const response = {
-          'totalCarrosVendidos': totalCarrosVendidos,
-          'valorAcumuladoVendas': totalValorVendas
-        }
+          totalCarrosVendidos: totalCarrosVendidos,
+          valorAcumuladoVendas: totalValorVendas,
+        };
         return res.status(200).json({ msg: 'Relatório de vendas', response });
       }
     } catch (error) {
@@ -125,16 +114,14 @@ module.exports = {
     }
   },
 
-  async deleteCarById(req, res){
-    try{
+  async deleteCarById(req, res) {
+    try {
       const _id = req.params;
       const car = await Car.findByIdAndDelete(_id);
-      if(!car || car.length === 0)
-        return res.status(404).json({msg: "Carro não encontrado"});
-      else 
-        return res.json({msg : "Carro excluido com sucesso",car});
-      }catch(error){
-        return res.status(500).json({msg : "Erro de processo no servidor."});
-      }
-  }
+      if (!car || car.length === 0) return res.status(404).json({ msg: 'Carro não encontrado' });
+      else return res.json({ msg: 'Carro excluido com sucesso', car });
+    } catch (error) {
+      return res.status(500).json({ msg: 'Erro de processo no servidor.' });
+    }
+  },
 };
