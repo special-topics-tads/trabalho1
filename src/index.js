@@ -2,10 +2,12 @@ const express = require('express');
 const app = express();
 const router = require('./routes/router');
 const mongoose = require('mongoose');
-const port = 3000;
+const port = process.env.PORT || 3000;
+const db = require('./db');
 
 try {
-  mongoose.connect('mongodb://localhost:27017/car', {
+  mongoose.connect(db.mongoURI, {
+    useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 } catch (error) {
